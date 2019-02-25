@@ -18,7 +18,7 @@ function [clusterSolution ncl] = computeSummaryPSM_lmkk(PSMs,nc)
 % ncl: range of cluster numbers to be considered
 
 addpath('~/lkkmeans')%add path to folder containing lmkk code
-addpath(genpath('~/mosek'));
+addpath(genpath('~/mosek'));%add path to folder containing the mosek software
 meanPSM = mean(PSMs,3);
 
 if length(nc)>1
