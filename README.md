@@ -25,7 +25,7 @@ In Advances in Neural Information Processing Systems 27, pages 1305-1313.
 clustering in the post-processing. 
 
 Wang, B. et al. (2017). Visualization and analysis of single-cell RNA-seq data by
-%kernel-based similarity learning. Nat Meth, 14, 414-416.
+kernel-based similarity learning. Nat Meth, 14, 414-416.
 
 https://github.com/BatzoglouLabSU/SIMLR
 
