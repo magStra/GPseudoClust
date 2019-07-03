@@ -1,13 +1,16 @@
 %This is a minor adaptation of the SIMLR Matlab implementation 
-% of a function to estimate the number of clusters
+% of a function (Estimate_Number_of_Clusters_SIMLR) to estimate the number of clusters
 
 % Wang, B. et al. (2017). Visualization and analysis of single-cell RNA-seq data by
 %kernel-based similarity learning. Nat Meth, 14, 414-416.
 
 %https://github.com/BatzoglouLabSU/SIMLR
+%https://github.com/BatzoglouLabSU/SIMLR/blob/SIMLR/MATLAB/Estimate_Number_of_Clusters_SIMLR.m
 
 
-function [K1,K2] = estimateNumberClustersSIMLR(PSMs,NUMC)
+function [K1,K2] = estimateNumberClustersSIMLR_GPseudoClust_lmkk(PSMs,NUMC)
+%add path to SIMLR 
+    addpath(genpath('~/SIMLR-SIMLR'));
     meanPSM = mean(PSMs,3);
     W = Network_Diffusion(meanPSM,max(ceil(size(meanPSM,1)/20),100));
     %%%the following lines are taken from the SIMLR function

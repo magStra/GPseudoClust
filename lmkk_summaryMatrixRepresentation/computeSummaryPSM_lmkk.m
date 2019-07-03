@@ -22,7 +22,7 @@ addpath(genpath('~/mosek'));%add path to folder containing the mosek software
 meanPSM = mean(PSMs,3);
 
 if length(nc)>1
-    [K1 K2] = estimateNumberClustersSIMLR(meanPSM,2:10);
+    [K1 K2] = estimateNumberClustersSIMLR_GPseudoClust_lmkk(meanPSM,2:10);
     [KK2 ind2] = max(K2);
     ncl = nc(ind2); 
 else
