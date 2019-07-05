@@ -3,7 +3,7 @@
 %100 simulations
 %for 60% of the subsamples, all the genes are affected by dropout, for 40%
 %only 50% of the genes are affected
-addpath(genpath(pwd));
+addpath(genpath('../'));
 %add path to subaxis function
 %https://www.mathworks.com/matlabcentral/fileexchange/3696-subaxis-subplot
 addpath(genpath('~/subaxis'));

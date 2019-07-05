@@ -2,17 +2,10 @@
 #Charlotte, S and Robinson MD (2018). Bias, robustness and scalability in single-cell
 #differential expression analysis. Nature Methods 15, pages 255–261.
 
+#For comparability between GPseudoClust and GPseudoRank, we use the same preprocessing steps as in
+#Strauss et al. 2018.
 Shalek13 <- readRDS("[path to file]/GSE41265.rds")
 all <- assay(Shalek13)
-adjust_for_cell_size <- function(data)
-{
-  #data: rows are genes, columns are cells
-  #for each gene compute expectation of gex across cells
-  mu_g <- apply(data,1,mean)
-  data_mod <- data-mu_g
-  s_c <- apply(data_mod,2,median)
-  return(t(apply(data,1,function(m){return(m-s_c)})))
-}
 
 all <- log2(all+1)
 inds3 <- apply(all,1,function(x){return(sum(x!=0)>18*0.3)})

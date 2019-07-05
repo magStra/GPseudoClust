@@ -2,7 +2,7 @@
 % clusters) with additional dropout noise
 %higher levels of dropout noise
 %100 simulations
-addpath(genpath(pwd));
+addpath(genpath('../'));
 %add path to subaxis function
 %https://www.mathworks.com/matlabcentral/fileexchange/3696-subaxis-subplot
 addpath(genpath('~/subaxis'));

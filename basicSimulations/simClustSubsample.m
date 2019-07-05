@@ -1,5 +1,5 @@
+addpath(genpath('../'));
 captureTimes     = [ones([1,10]),repmat(2,[1,10]),repmat(3,[1,10])];
-%capture times for the subsampled cells
 fHandle          =  @GPseudoClust2;  
 fileName         = 'simDataClust.csv';
 uniqueIdentifiers    = 1:24;
