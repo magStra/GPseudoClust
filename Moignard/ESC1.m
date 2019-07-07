@@ -41,4 +41,9 @@ for j = 1:96
 end
 save('PSMs_ESC_1.mat','PSMs_ESC_1');
 %collect concentration parameters for subsampled chains
+alphasESC1 = zeros(2000,96);
+for j = 1:96
+    alphasESC1(:,j) = dlmread(sprintf('ESC_1_Results_Chain%d.csv',j),',',[0 0 1999 0]);
+end
+csvwrite('alphasESC1.csv',alphasESC1);
 

@@ -41,4 +41,9 @@ for j = 1:96
 end
 save('PSMs_ESC_2.mat','PSMs_ESC_1');
 
+alphasESC2 = zeros(2000,96);
+for j = 1:96
+    alphasESC2(:,j) = dlmread(sprintf('ESC_2_Results_Chain%d.csv',j),',',[0 0 1999 0]);
+end
+csvwrite('alphasESC2.csv',alphasESC2);
 
