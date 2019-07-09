@@ -11,7 +11,16 @@ inside GPseudoClust folder).
 
 The clustering method can be run without downloading additional software. 
 
-The folder lmkk_summaryMatrixRepresentation contains methods for postprocessing, which use the following software, which requires 
+However, for postprocessing the following is required:
+
+https://github.com/magStra/nonparametricSummaryPSM
+
+For plotting we use the subaxis function by Aslak Grinsted:
+
+https://www.mathworks.com/matlabcentral/fileexchange/3696-subaxis-subplot
+
+
+The folder lmkk_summaryMatrixRepresentation contains additional methods for postprocessing, which use the following software, which requires 
 separate download:
 
 1) Code implementing the localised kernel k-means method available at https://github.com/mehmetgonen/lmkkmeans,

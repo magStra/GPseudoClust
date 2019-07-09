@@ -1,8 +1,9 @@
 function [] = GPseudoClustPlus(fileName, uniqueIdentifier, nSamples,...
 verbose, inputSeed, permuteData,captureTimes,b,adjustForCellSize,subSelect,...
 n0,n3,n3a,jj,kk,pp,delta)
-%An extension of GPseudoClust2, where the moves for the sampling of the
-%orderings are specified as for GPseudoRank.
+%An version of GPseudoClust2, where the moves for the sampling of the
+%orderings are specified as for GPseudoRank rather than with default proposal
+%parameters as recommended for standard usage.
     
 %part of the code is taken or adapted from (see comments in the text
 %indicating the lines): 
