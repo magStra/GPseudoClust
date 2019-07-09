@@ -1,5 +1,5 @@
 # GPseudoClust
-Matlab code for the GPseudoClust method presented in 
+Code for the GPseudoClust method, including pre- and postprocessing steps. 
 
 Magdalena E Strauß, Paul DW Kirk, John E Reid, Lorenz Wernisch (2019); 
 GPseudoClust: deconvolution of shared pseudo-trajectories at single-cell resolution.
