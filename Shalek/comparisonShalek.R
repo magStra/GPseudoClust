@@ -5,7 +5,7 @@ ShalekGeneNames <- ShalekData[,1]
 ShalekData <- ShalekData[,126:308]#excluding gene names, and capture times 0h, 1h
 library(mclust)
 library(cluster)
-# 
+#
 clusters_mclust <- Mclust(ShalekData,G=4:20)$classification
 
 library(fpc)
@@ -16,7 +16,7 @@ plot(clusters_H)
 library(clValid)
 clComp <- clValid(ShalekData, 4:15, clMethods = "hierarchical", validation =
           "internal", maxitems = 600, metric = "euclidean", method = "complete",
-        neighbSize = 10, annotation = NULL, 
+        neighbSize = 10, annotation = NULL,
          dropEvidence=NULL, verbose=FALSE)
 summary(clComp)
 clusters_H <- cutree(clusters_H,k=4)#from silhouette width with clValid
@@ -42,16 +42,12 @@ write.table(pseudoTimesSLICER,file = "../scratch/pseudoTimesSLICER.csv",sep=",",
 write.table(shQuote(ShalekGeneNames),file = "../scratch/ShalekGeneNames.csv",sep=",", col.names = F,row.names=F)
 
 # ###clusters from ordering with SLICER and subsequent clustering with GPclust
-# #ordering and GPclust, output of GPclust is sensitive to initialisation and may vary 
-# a bit and need several restarts. The following is copied from 
-GP_Clust <- c(3.,  2. , 4. , 2. , 3. , 1. , 1.  ,5. , 4. , 1. , 4.,  1. , 1. , 2.,  5. , 1.,  1.,  1.,
-              2.,  1.,  1.,  4. , 2.,  5. , 2. , 3. , 3.,  3. , 3.,  2. , 1.,  1. , 2. , 3. , 1.,  3.,
-              3, 1,  1,  6,  2, 2,  1,  1,  1,  2,  1,  2,  4,  1,  3,  1,  4,  1,
-              1,  6,  3,  2,  4,  5,  1,  5,  3,  1,  4,  1,  2,  1,  2,  1,  1,  3,
-              3,  1) # copied from Python notebook
-# 
+# #ordering and GPclust, output of GPclust is sensitive to initialisation and may vary
+# a bit and need several restarts. The following is copied from
+GP_Clust <- unlist(read.table("SLICER_GClShalek.csv",sep=","))
+#
 # # ordering with DeLorean and clustering with GPClust
-# 
+# uncomment to run, or load cluster allocations directly (below)
 # library(DeLorean)
 # pd <- data.frame(cell =as.factor(sapply(1:183,toString)),obstime= c(rep(2,65),rep(4,60),rep(6,58)),
 #                 capture = as.factor(c(rep(2,65),rep(4,60),rep(6,58))) )
@@ -77,33 +73,24 @@ GP_Clust <- c(3.,  2. , 4. , 2. , 3. , 1. , 1.  ,5. , 4. , 1. , 4.,  1. , 1. , 2
 # write.csv(pseudoTimeOrder$x,file="../scratch/deLoreanTShalek.csv")
 # write.csv(ShalekData[,pseudoTimeOrder$ix],file="/scratch/deLoreanShalek.csv")
 
-GP_Clust1 <- c(2,  1,  1,  1,  6,  1,  1,  2,  1,  1,  1,  1,  1,  1,  4,  1,  1,  1,
-               1,  1,  1,  1,  1,  2,  1,  5,  3,  2,  5,  1,  1,  1,  1,  3,  1,  3,
-               2,  1,  1,  2,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  6,  1,  1,  1,
-               1,  4,  5,  1,  2,  2,  1,  4,  3,  1,  1,  1,  1,  1,  1,  1,  1,  2,
-               3,  1) #again copied from python output
-adjustedRandIndex(GP_Clust,GP_Clust1)
-GPclusters1 <- list()
-for (j in 1:max(GP_Clust1)){
-  GPclusters1[[j]] <- ShalekGeneNames[which(GP_Clust1 == j)]}
+GP_Clust1  <- unlist(read.table("deLoreanGClShalek.csv",sep=","))
+
 
 # ordering and clustering with monocle2
 library(monocle)
 load("../data/ShalekDeLorean.rda")#load data without cell size correction, as required by monocle2
+#script to download the data is available here:
+#https://github.com/JohnReid/DeLorean/blob/master/inst/scripts/fetch-Shalek-2014.Rmd
 ShalekSubset <- shalek.A.expr[ShalekGeneNames,colnames(ShalekData)]
 pd <- shalek.A.cell.meta[colnames(ShalekData),]
 rownames(pd)=colnames(ShalekData)
 names(shalek.A.gene.meta)[1] <- "gene_short_name"
 pd <- as(pd, "AnnotatedDataFrame")
 
-fd <- shalek.A.gene.meta[xx,]
-rownames(fd) <- ShalekGeneNames
+fd <- shalek.A.gene.meta[shalek.A.gene.meta$gene_short_name%in%ShalekGeneNames,]
+rownames(fd) <- fd$gene_short_name
 fd <- as(fd, "AnnotatedDataFrame")
 cds <- newCellDataSet(as.matrix(ShalekData), phenoData = pd, featureData = fd,expressionFamily = gaussianff())
-diff_test_res <- differentialGeneTest(cds,
-                                      fullModelFormulaStr = "~Media")
-ordering_genes <- row.names (subset(diff_test_res, qval < 0.01))
-cds <- setOrderingFilter(cds, ordering_genes)#none are excluded as expected
 cds <-  reduceDimension(cds,pseudo_expr = 0,verbose = T,norm_method = "none")
 cds <- orderCells(cds)
 full_model_fits <- fitModel(cds)
@@ -111,7 +98,6 @@ expression_curve_matrix <- responseMatrix(full_model_fits)#' This function fits 
 #' By default, expression levels are modeled as smooth functions of the Pseudotime value of each
 #' cell.
 clusters <- clusterGenes(expression_curve_matrix,k=4)
-plot_clusters(cds, clusters)
 distMonocle <- as.dist(1-cor(t(expression_curve_matrix))/2)
 sil <- c()
 clusters_Monocle<-list()
@@ -120,9 +106,6 @@ for (j in 4:15){#4 modules in the data, so at least 4 clusters
   sil = c(sil,mean(silhouette(clusters_Monocle[[j-3]],distMonocle)[,3]))}
 clusters_Monocle = clusters_Monocle[[which.max(sil)]]
 
-#in case of namespace error, load pre-computed clusters for monocle
-
-load("../scratch/clustersMonocle.rda")
 
 #import SIMLR clusters (SIMLRComp.m)
 options(stringsAsFactors = F)
@@ -153,16 +136,16 @@ colnames(saveMat1) <- c('mcl','SIMLR','PAM','hier.','SL+GCl','De+GCl','Mon 2')
 #plot heatmap of ARIs
 heatmap(saveMat1, Colv = NA, Rowv = NA, scale="column")
 #adding draws from GPseudoClust posterior
-chains <- sample(1:96,8,replace=T)
-samples <- sample(2001:4000,8,replace=T)
-allocs <- c()
-for (j in 1:8){
-  fileName <- sprintf("Shalek_Results_Chain%d.csv",chains[j])
-  A <- read.table(fileName ,sep=",",header=F,skip=chains[j])
-  allocs <- rbind(allocs,A[1,2:75])
-}
-save(allocs,file="Shalek_randomPostSamples.rda")
-write.table(allocs,"Shalek_randomPostSamples.csv",sep=",",row.names=F,col.names = F)
+# chains <- sample(1:96,8,replace=T)
+# samples <- sample(2001:4000,8,replace=T)
+# allocs <- c()
+# for (j in 1:8){
+#   fileName <- sprintf("Shalek_Results_Chain%d.csv",chains[j])
+#   A <- read.table(fileName ,sep=",",header=F,skip=chains[j])
+#   allocs <- rbind(allocs,A[1,2:75])
+# }
+# save(allocs,file="Shalek_randomPostSamples.rda")
+# write.table(allocs,"Shalek_randomPostSamples.csv",sep=",",row.names=F,col.names = F)
 
 load("Shalek_randomPostSamples.rda")
 allocs <- as.matrix(allocs)
@@ -174,3 +157,4 @@ for (j in 1:8)
 listOfAllocationsExt <- append(listOfAllocations,allocsListGPs)
 saveMat2 <- pairwiseARI(listOfAllocationsExt)
 write.table(saveMat2,"Shalek_ARIExt.csv",sep=",",row.names=F,col.names=F)
+
