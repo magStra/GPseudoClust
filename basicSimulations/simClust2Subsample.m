@@ -31,6 +31,7 @@ for j=1:24
     PSM(:,:,j) = psm(dlmread(sprintf('simDataClust2_Results_Chain%d.csv',j),',',[99 1 199 52]));
 end
 save('PSMSim2NoDropout.mat','PSM');
+
 load('PSMSim2NoDropout.mat');
 
 clusterSolution = computeSummaryPSM_lmkk(PSM,2:10);
