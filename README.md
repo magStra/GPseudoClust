@@ -11,7 +11,11 @@ inside GPseudoClust folder).
 
 The clustering method can be run without downloading additional software. 
 
-However, for postprocessing the following is required:
+However, for postprocessing our R package for combining PSMs using nonparametric Bayesian methods is required
+
+library(devtools)
+
+install_github("magStra/nonparametricSummaryPSM")
 
 https://github.com/magStra/nonparametricSummaryPSM
 
