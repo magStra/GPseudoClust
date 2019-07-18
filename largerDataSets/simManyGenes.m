@@ -1,8 +1,7 @@
-function [] = sim2Large(outputFile,inputSeed)
+function [] = simManyGenes(outputFile,inputSeed,nGenes)
 rng(inputSeed);
 set(0,'defaultFigureUnits','centimeters');
-nGenes = randsample(20:30,1);
-nCells = 9000;
+nCells = 60;
 nClusters = randsample(2:5,1);
 tau = (0.5:(nCells-0.5))/nCells;
 [X, Y] = meshgrid(tau);
@@ -19,25 +18,15 @@ Sigmas = {};
 mu = {};
 for j = 1:nClusters
     K{j} = sigmaW2(j)*(1+sqrt(3)*timeDiffs/L(j)).*exp(-sqrt(3)*timeDiffs/L(j));
-    mu{j} = mvnrnd(zeros(1,9000),K{j});
+    mu{j} = mvnrnd(zeros(1,60),K{j});
     Sigmas{j} = sigmaw2(j)*(1+sqrt(3)*timeDiffs/l(j)).*exp(-sqrt(3)*timeDiffs/l(j));
 end
 
-simData = zeros(nGenes,9000);
+simData = zeros(nGenes,60);
 for j = 1:nGenes
     simData(j,:)= mvnrnd(mu{z(j)},Sigmas{z(j)}+eye(nCells)*sigmaE2(z(j)));
 end
-colors = ['g','m','b','r','k'];
-save([outputFile,'.mat'],'mu','nClusters','sigmaW2','sigmaE2','L','l','sigmaw2','z','nGenes');
-figure()
-for j = 1:nGenes
-    plot(tau,simData(j,:),'o','Color',colors(z(j)),'MarkerSize',3);
-    hold on;
-end
-set(gcf, 'PaperPosition', [0 0 8.8 6]);
-set(gcf,'PaperSize',[8.8 6]);
-print([outputFile,'.pdf'],'-dpdf');
 csvwrite([outputFile,'.csv'],simData);
-close all;
+save([outputFile,'.mat'],'mu','nClusters','sigmaW2','sigmaE2','L','l','sigmaw2','z','nGenes');
 end
 
