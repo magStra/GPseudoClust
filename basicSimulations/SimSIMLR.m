@@ -1,7 +1,5 @@
-clear all
-close all
-addpath(genpath('~/Documents/GPSeudoClustCode'));
-
+addpath(genpath('../'));
+addpath(genpath('~/SIMLR-SIMLR')); %add path to SIMLR
 %Simulated data set 1
 data = csvread('simDataClust.csv');
 true_labs =  [repmat(1,1,8),repmat(2,1,4),repmat(3,1,12),repmat(4,1,16),repmat(5,1,12)];
